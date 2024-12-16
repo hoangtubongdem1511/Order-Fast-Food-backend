@@ -14,6 +14,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "restaurant")
 public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -45,6 +46,7 @@ public class Restaurant {
 
     private LocalDateTime registrationDate;
 
+    @Column(name = "[open]")
     private boolean open;
 
     @JsonIgnore
