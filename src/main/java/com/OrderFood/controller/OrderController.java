@@ -4,9 +4,11 @@ import com.OrderFood.Model.CartItem;
 import com.OrderFood.Model.Order;
 import com.OrderFood.Model.User;
 import com.OrderFood.Service.OrderService;
+import com.OrderFood.Service.PaymentService;
 import com.OrderFood.Service.UserService;
 import com.OrderFood.request.AddCartItemRequest;
 import com.OrderFood.request.OrderRequest;
+import com.OrderFood.response.PaymentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +23,18 @@ public class OrderController {
     private OrderService orderService;
 
     @Autowired
+    private PaymentService paymentService;
+
+    @Autowired
     private UserService userService;
 
     @PostMapping("/order")
-    public ResponseEntity<Order> createOrder(@RequestBody OrderRequest req,
-                                                  @RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<PaymentResponse> createOrder(@RequestBody OrderRequest req,
+                                                       @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Order order = orderService.createOrder(req , user);
-        return new ResponseEntity<>(order, HttpStatus.OK);
+        PaymentResponse res = paymentService.createPaymentLink(order);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("/order/user")
